@@ -46,10 +46,16 @@ public class Resolver {
 
 	public Message getReply(Message requestMessage) throws IOException {
 		if (requestMessage.getHeader().getId() == 0) {
-			requestMessage.getHeader().setId(RANDOM.nextInt());
+			requestMessage.getHeader().setId((short) RANDOM.nextInt(1 << 15));
 		}
 
-		byte[] messageBytes = requestMessage.toBytes();
+		ByteBuffer requestBuffer = ByteBuffer.allocate(1500);
+		requestMessage.toBytes(requestBuffer);
+		requestBuffer.flip();
+
+		byte[] messageBytes = new byte[requestBuffer.limit()];
+		requestBuffer.get(messageBytes);
+
 		DatagramPacket requestPacket = new DatagramPacket(
 				messageBytes, messageBytes.length,
 				dnsServer, DNS_PORT);
@@ -57,7 +63,7 @@ public class Resolver {
 		try (DatagramSocket s = new DatagramSocket()) {
 			s.send(requestPacket);
 
-			byte[] buf = new byte[512];
+			byte[] buf = new byte[1024];
 			DatagramPacket response = new DatagramPacket(buf, buf.length);
 			s.receive(response);
 

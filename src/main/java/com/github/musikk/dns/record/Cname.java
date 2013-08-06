@@ -5,20 +5,34 @@ import java.nio.ByteBuffer;
 
 import com.github.musikk.dns.Domain;
 
-
 public class Cname extends RecordData<Cname> {
-	private Domain domain;
-	@Override
-	public byte[] toBytes() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+
+	private final Domain domain;
+
+	public Cname() {
+		this(new Domain());
 	}
+
+	public Cname(Domain domain) {
+		this.domain = domain;
+	}
+
+	public Domain getDomain() {
+		return domain;
+	}
+
+	@Override
+	public Cname toBytes(ByteBuffer buf) throws IOException {
+		domain.toBytes(buf);
+		return this;
+	}
+
 	@Override
 	public RecordData<Cname> fromBytes(ByteBuffer buf) throws IOException {
-		domain = new Domain();
 		domain.fromBytes(buf);
 		return this;
 	}
+
 	@Override
 	public String toString() {
 		return "Cname [domain=" + domain + "]";

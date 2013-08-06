@@ -1,19 +1,18 @@
 package com.github.musikk.dns;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
 public class Question implements MessageContent<Question> {
+
 	private Domain domain;
 	private Type questionType;
 	private Class questionClass;
+
 	public Domain getDomain() {
 		return domain;
 	}
+
 	public void setDomain(Domain domain) {
 		this.domain = domain;
 	}
@@ -29,17 +28,14 @@ public class Question implements MessageContent<Question> {
 	public void setQuestionClass(Class questionClass) {
 		this.questionClass = questionClass;
 	}
+
 	@Override
-	public byte[] toBytes() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		DataOutput dataOut = new DataOutputStream(out);
+	public Question toBytes(ByteBuffer buf) throws IOException {
+		domain.toBytes(buf);
+		buf.putShort((short) questionType.getCode());
+		buf.putShort((short) questionClass.getCode());
 
-		byte[] domainBytes = domain.toBytes();
-		dataOut.write(domainBytes);
-		dataOut.writeShort(questionType.getCode());
-		dataOut.writeShort(questionClass.getCode());
-
-		return out.toByteArray();
+		return this;
 	}
 	@Override
 	public Question fromBytes(ByteBuffer buf) throws IOException {

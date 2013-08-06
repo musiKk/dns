@@ -5,32 +5,37 @@ import java.nio.ByteBuffer;
 
 import com.github.musikk.dns.Domain;
 
-public class Ns extends RecordData<Ns> {
+public class Mg extends RecordData<Mg> {
 
 	private final Domain domain;
 
-	public Ns() {
+	public Mg() {
 		this(new Domain());
 	}
 
-	public Ns(Domain domain) {
+	public Mg(Domain domain) {
 		this.domain = domain;
 	}
 
+	public Domain getDomain() {
+		return domain;
+	}
+
 	@Override
-	public Ns toBytes(ByteBuffer buf) throws IOException {
+	public RecordData<Mg> toBytes(ByteBuffer buf) throws IOException {
 		domain.toBytes(buf);
 		return this;
 	}
 
 	@Override
-	public RecordData<Ns> fromBytes(ByteBuffer buf) throws IOException {
+	public RecordData<Mg> fromBytes(ByteBuffer buf) throws IOException {
 		domain.fromBytes(buf);
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "Ns [domain=" + domain + "]";
+		return "Mg [domain=" + domain + "]";
 	}
+
 }

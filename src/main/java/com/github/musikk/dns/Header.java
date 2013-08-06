@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 
 public class Header implements MessageContent<Header> {
-	private int id;
+	private short id;
 	private boolean request;
 	private Header.Opcode opcode;
 	private boolean authoritativeAnswer;
@@ -13,15 +13,15 @@ public class Header implements MessageContent<Header> {
 	private boolean recursionDesired;
 	private boolean recursionAvailable;
 	private Header.ResponseCode responseCode;
-	private int questionEntries;
-	private int answerEntries;
-	private int authorityRecords;
-	private int additionalRecords;
+	private short questionEntries;
+	private short answerEntries;
+	private short authorityRecords;
+	private short additionalRecords;
 
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(short id) {
 		this.id = id;
 	}
 	public boolean isRequest() {
@@ -69,42 +69,42 @@ public class Header implements MessageContent<Header> {
 	public int getQuestionEntries() {
 		return questionEntries;
 	}
-	public void setQuestionEntries(int questionEntries) {
+	public void setQuestionEntries(short questionEntries) {
 		this.questionEntries = questionEntries;
 	}
 	public int getAnswerEntries() {
 		return answerEntries;
 	}
-	public void setAnswerEntries(int answerEntries) {
+	public void setAnswerEntries(short answerEntries) {
 		this.answerEntries = answerEntries;
 	}
 	public int getAuthorityRecords() {
 		return authorityRecords;
 	}
-	public void setAuthorityRecords(int authorityRecords) {
+	public void setAuthorityRecords(short authorityRecords) {
 		this.authorityRecords = authorityRecords;
 	}
 	public int getAdditionalRecords() {
 		return additionalRecords;
 	}
-	public void setAdditionalRecords(int additionalRecords) {
+	public void setAdditionalRecords(short additionalRecords) {
 		this.additionalRecords = additionalRecords;
 	}
 	@Override
-	public byte[] toBytes() {
-		byte[] result = new byte[12];
-		set16Bit(result, id, 0);
-		int flags = (request ? 0 : 1) << 15;
+	public Header toBytes(ByteBuffer buf) {
+		buf.putShort(id);
+		short flags = (short) ((request ? 0 : 1) << 15);
 		flags |= (opcode.getCode() & 0b1111) << 11;
 		// AA, TC set in response
 		flags |= (recursionDesired ? 1 : 0) << 8;
 		// RA, RCODE set in response
-		set16Bit(result, flags, 2);
-		set16Bit(result, questionEntries, 4);
-		set16Bit(result, answerEntries, 6);
-		set16Bit(result, authorityRecords, 8);
-		set16Bit(result, additionalRecords, 10);
-		return result;
+
+		buf.putShort(flags);
+		buf.putShort(questionEntries);
+		buf.putShort(answerEntries);
+		buf.putShort(authorityRecords);
+		buf.putShort(additionalRecords);
+		return this;
 	}
 	@Override
 	public Header fromBytes(ByteBuffer buf) throws IOException {
@@ -118,10 +118,10 @@ public class Header implements MessageContent<Header> {
 		recursionAvailable = ((flags >> 7) & 1) == 1;
 		responseCode = ResponseCode.byCode(flags & 0b1111);
 
-		questionEntries = buf.getShort() & 0xFFFF;
-		answerEntries = buf.getShort() & 0xFFFF;
-		authorityRecords = buf.getShort() & 0xFFFF;
-		additionalRecords = buf.getShort() & 0xFFFF;
+		questionEntries = buf.getShort();
+		answerEntries = buf.getShort();
+		authorityRecords = buf.getShort();
+		additionalRecords = buf.getShort();
 
 		return this;
 	}

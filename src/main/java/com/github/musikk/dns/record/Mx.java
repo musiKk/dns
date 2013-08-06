@@ -5,22 +5,37 @@ import java.nio.ByteBuffer;
 
 import com.github.musikk.dns.Domain;
 
-
 public class Mx extends RecordData<Mx> {
+
 	private int preference;
-	private Domain exchange;
-	@Override
-	public byte[] toBytes() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	private final Domain exchange;
+
+	public Mx() {
+		this(0, new Domain());
 	}
+
+	public Mx(int preference, Domain exchange) {
+		if (preference > (1 << 15) || preference < 0) {
+			throw new IllegalArgumentException("Preference must be between 0 and 65535.");
+		}
+		this.preference = preference;
+		this.exchange = exchange;
+	}
+
+	@Override
+	public Mx toBytes(ByteBuffer buf) throws IOException {
+		buf.putShort((short) preference);
+		exchange.toBytes(buf);
+		return this;
+	}
+
 	@Override
 	public RecordData<Mx> fromBytes(ByteBuffer buf) throws IOException {
 		preference = buf.getShort() & 0xFFFF;
-		exchange = new Domain();
 		exchange.fromBytes(buf);
 		return this;
 	}
+
 	@Override
 	public String toString() {
 		return "Mx [preference=" + preference + ", exchange=" + exchange

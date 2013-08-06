@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-
 public class Domain implements MessageContent<Domain> {
 	private final Collection<String> labels = new ArrayList<>();
 
@@ -38,27 +37,15 @@ public class Domain implements MessageContent<Domain> {
 		return new Domain(name.split("\\."));
 	}
 	@Override
-	public byte[] toBytes() {
+	public Domain toBytes(ByteBuffer buf) {
 		// TODO use compression
-		int len = 0;
 		for (String l : labels) {
-			len += l.length();
+			Util.writeCharacterString(buf, l.getBytes());
 		}
-		/*
-		 * One byte for the length of each label plus the zero length root
-		 * label.
-		 */
-		byte[] result = new byte[len + labels.size() + 1];
-		int i = 0;
-		for (String l : labels) {
-			byte[] labelBytes = l.getBytes();
-			int labelLength = labelBytes.length;
-			result[i] = (byte) labelLength;
-			System.arraycopy(labelBytes, 0, result, i + 1, labelLength);
-			i += labelLength + 1;
-		}
-		return result;
+		buf.put((byte) 0);
+		return this;
 	}
+
 	@Override
 	public Domain fromBytes(ByteBuffer buf) throws IOException {
 		labels.clear();
@@ -82,6 +69,7 @@ public class Domain implements MessageContent<Domain> {
 		}
 		return this;
 	}
+
 	@Override
 	public String toString() {
 		return "Domain [labels=" + labels + "]";

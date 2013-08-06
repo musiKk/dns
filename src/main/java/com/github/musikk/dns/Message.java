@@ -1,6 +1,5 @@
 package com.github.musikk.dns;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -8,13 +7,14 @@ import java.util.Collection;
 
 import com.github.musikk.dns.record.Record;
 
-
 public class Message implements MessageContent<Message> {
+
 	private Header header;
 	private final Collection<Question> questions = new ArrayList<>();
 	private final Collection<Record> answers = new ArrayList<>();
 	private final Collection<Record> authority = new ArrayList<>();
 	private final Collection<Record> additional = new ArrayList<>();
+
 	public Header getHeader() {
 		return header;
 	}
@@ -33,37 +33,32 @@ public class Message implements MessageContent<Message> {
 	public Collection<Record> getAdditional() {
 		return additional;
 	}
+
 	@Override
-	public byte[] toBytes() throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream(512);
+	public Message toBytes(ByteBuffer buf) throws IOException {
+		header.setQuestionEntries((short) questions.size());
+		header.setAnswerEntries((short) answers.size());
+		header.setAuthorityRecords((short) authority.size());
+		header.setAdditionalRecords((short) additional.size());
 
-		header.setQuestionEntries(questions.size());
-		header.setAnswerEntries(answers.size());
-		header.setAuthorityRecords(authority.size());
-		header.setAdditionalRecords(additional.size());
-
-		byte[] headerBytes = header.toBytes();
-		out.write(headerBytes, 0, headerBytes.length);
+		header.toBytes(buf);
 
 		for (Question q : questions) {
-			byte[] questionBytes = q.toBytes();
-			out.write(questionBytes, 0, questionBytes.length);
+			q.toBytes(buf);
 		}
 		for (Record r : answers) {
-			byte[] recordBytes = r.toBytes();
-			out.write(recordBytes, 0, recordBytes.length);
+			r.toBytes(buf);
 		}
 		for (Record r : authority) {
-			byte[] recordBytes = r.toBytes();
-			out.write(recordBytes, 0, recordBytes.length);
+			r.toBytes(buf);
 		}
 		for (Record r : additional) {
-			byte[] recordBytes = r.toBytes();
-			out.write(recordBytes, 0, recordBytes.length);
+			r.toBytes(buf);
 		}
 
-		return out.toByteArray();
+		return this;
 	}
+
 	@Override
 	public Message fromBytes(ByteBuffer buf) throws IOException {
 		header = new Header();
@@ -87,6 +82,7 @@ public class Message implements MessageContent<Message> {
 		}
 		return this;
 	}
+
 	@Override
 	public String toString() {
 		return "Message [header=" + header + ", questions=" + questions
