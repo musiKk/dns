@@ -35,8 +35,8 @@ public class Hinfo extends RecordData<Hinfo> {
 
 	@Override
 	public RecordData<Hinfo> fromBytes(ByteBuffer buf) throws IOException {
-		cpu = new String(Util.parseCharacterString(buf));
-		os = new String(Util.parseCharacterString(buf));
+		cpu = new String(Util.parseCharacterString(buf, getRecordLength() - 1));
+		os = new String(Util.parseCharacterString(buf, getRecordLength() - cpu.length()));
 		return this;
 	}
 

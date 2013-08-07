@@ -35,12 +35,7 @@ public class Txt extends RecordData<Txt> {
 	public RecordData<Txt> fromBytes(ByteBuffer buf) throws IOException {
 		int length = getRecordLength();
 		while (length > 0) {
-			int stringLength = buf.get(0);
-			if (length - stringLength < 0) {
-				System.err.println("Unable to parse TXT record. Character string is longer than total length allows.");
-				return this;
-			}
-			byte[] b = Util.parseCharacterString(buf);
+			byte[] b = Util.parseCharacterString(buf, length);
 			length -= b.length;
 			strings.add(new String(b));
 		}
