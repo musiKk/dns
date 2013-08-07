@@ -71,11 +71,17 @@ public class Record implements MessageContent<Record> {
 		ttl = buf.getInt() & 0xFFFFFFFF;
 		int recordDataLength = buf.getShort() & 0xFFFF;
 		switch (recordType) {
+		case AFSDB:
+			recordData = new AfsDb();
+			break;
 		case CNAME:
 			recordData = new Cname();
 			break;
 		case HINFO:
 			recordData = new Hinfo();
+			break;
+		case ISDN:
+			recordData = new Isdn();
 			break;
 		case MB:
 			recordData = new Mb();
@@ -98,11 +104,20 @@ public class Record implements MessageContent<Record> {
 		case PTR:
 			recordData = new Ptr();
 			break;
+		case RP:
+			recordData = new Rp();
+			break;
+		case RT:
+			recordData = new Rt();
+			break;
 		case SOA:
 			recordData = new Soa();
 			break;
 		case TXT:
 			recordData = new Txt();
+			break;
+		case X25:
+			recordData = new X25();
 			break;
 		}
 		if (recordClass == Class.IN) {
