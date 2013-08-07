@@ -11,7 +11,11 @@ public class Null extends RecordData<Null> {
 	}
 
 	public Null(byte[] data) {
-		this.data = data;
+		this.data = data.clone();
+	}
+
+	public byte[] getData() {
+		return data.clone();
 	}
 
 	@Override

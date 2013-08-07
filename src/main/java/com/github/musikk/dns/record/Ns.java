@@ -17,6 +17,10 @@ public class Ns extends RecordData<Ns> {
 		this.domain = domain;
 	}
 
+	public Domain getDomain() {
+		return domain;
+	}
+
 	@Override
 	public Ns toBytes(ByteBuffer buf) throws IOException {
 		domain.toBytes(buf);

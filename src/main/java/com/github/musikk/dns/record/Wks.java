@@ -23,6 +23,18 @@ public class Wks extends RecordData<Wks> {
 		this.bitmap = (BitSet) bitmap.clone();
 	}
 
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	public int getProtocol() {
+		return protocol;
+	}
+
+	public BitSet getBitmap() {
+		return bitmap;
+	}
+
 	@Override
 	public RecordData<Wks> toBytes(ByteBuffer buf) throws IOException {
 		buf.put(address.getAddress());

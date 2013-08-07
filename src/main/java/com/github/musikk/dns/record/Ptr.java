@@ -17,6 +17,10 @@ public class Ptr extends RecordData<Ptr> {
 		this.domain = domain;
 	}
 
+	public Domain getDomain() {
+		return domain;
+	}
+
 	@Override
 	public RecordData<Ptr> toBytes(ByteBuffer buf) throws IOException {
 		domain.toBytes(buf);

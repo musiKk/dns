@@ -37,6 +37,34 @@ public class Soa extends RecordData<Soa> {
 		this.minimum = minimum;
 	}
 
+	public Domain getZoneSource() {
+		return zoneSource;
+	}
+
+	public Domain getZoneMailbox() {
+		return zoneMailbox;
+	}
+
+	public long getSerial() {
+		return serial;
+	}
+
+	public long getRefresh() {
+		return refresh;
+	}
+
+	public long getRetry() {
+		return retry;
+	}
+
+	public long getExpire() {
+		return expire;
+	}
+
+	public long getMinimum() {
+		return minimum;
+	}
+
 	@Override
 	public RecordData<Soa> toBytes(ByteBuffer buf) throws IOException {
 		zoneSource.toBytes(buf);

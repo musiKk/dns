@@ -15,11 +15,19 @@ public class Mx extends RecordData<Mx> {
 	}
 
 	public Mx(int preference, Domain exchange) {
-		if (preference > (1 << 15) || preference < 0) {
+		if (preference > 65535 || preference < 0) {
 			throw new IllegalArgumentException("Preference must be between 0 and 65535.");
 		}
 		this.preference = preference;
 		this.exchange = exchange;
+	}
+
+	public int getPreference() {
+		return preference;
+	}
+
+	public Domain getExchange() {
+		return exchange;
 	}
 
 	@Override

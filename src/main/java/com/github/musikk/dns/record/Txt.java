@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import com.github.musikk.dns.Util;
 
@@ -16,6 +17,10 @@ public class Txt extends RecordData<Txt> {
 
 	public Txt(Collection<String> strings) {
 		this.strings.addAll(strings);
+	}
+
+	public Collection<String> getStrings() {
+		return Collections.unmodifiableCollection(strings);
 	}
 
 	@Override

@@ -19,6 +19,14 @@ public class Minfo extends RecordData<Minfo> {
 		this.errorDomain = errorDomain;
 	}
 
+	public Domain getDomain() {
+		return domain;
+	}
+
+	public Domain getErrorDomain() {
+		return errorDomain;
+	}
+
 	@Override
 	public RecordData<Minfo> toBytes(ByteBuffer buf) throws IOException {
 		domain.toBytes(buf);
