@@ -125,6 +125,12 @@ public class Record implements MessageContent<Record> {
 			case A:
 				recordData = new A();
 				break;
+			case NSAP:
+				recordData = new Nsap();
+				break;
+			case NSAP_PTR:
+				recordData = new NsapPtr();
+				break;
 			case WKS:
 				recordData = new Wks();
 				break;
