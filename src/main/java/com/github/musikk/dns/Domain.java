@@ -56,7 +56,7 @@ public class Domain implements MessageContent<Domain> {
 			}
 			if ((labelLength & 0b1100_0000) == 0b1100_0000) {
 				// TODO save the labels in some sort of prefix tree to avoid duplicate parsing
-				int pointerOffset = (labelLength & 0b0011_1111) << 8 | buf.get();
+				int pointerOffset = (labelLength & 0b0011_1111) << 8 | (buf.get() & 0xFF);
 				// pointer
 				Domain pointee = new Domain();
 				pointee.fromBytes((ByteBuffer) buf.duplicate().position(pointerOffset));
