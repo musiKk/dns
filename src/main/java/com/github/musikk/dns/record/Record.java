@@ -83,6 +83,9 @@ public class Record implements MessageContent<Record> {
 		case ISDN:
 			recordData = new Isdn();
 			break;
+		case LOC:
+			recordData = new Loc();
+			break;
 		case MB:
 			recordData = new Mb();
 			break;
