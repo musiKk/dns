@@ -1,10 +1,7 @@
 package com.github.musikk.dns.transport;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.ByteBuffer;
 import java.util.Random;
 
 import com.github.musikk.dns.Class;
@@ -22,9 +19,14 @@ public class Resolver {
 	public static final int DNS_PORT = 53;
 
 	private final InetAddress dnsServer;
+	private boolean useUdp = true;
 
 	public Resolver(InetAddress dnsServer) {
 		this.dnsServer = dnsServer;
+	}
+
+	public void setUseUdp(boolean useUdp) {
+		this.useUdp = useUdp;
 	}
 
 	public Message request(String domain) throws IOException {
@@ -49,32 +51,17 @@ public class Resolver {
 			requestMessage.getHeader().setId((short) RANDOM.nextInt(1 << 15));
 		}
 
-		ByteBuffer requestBuffer = ByteBuffer.allocate(1500);
-		requestMessage.toBytes(requestBuffer);
-		requestBuffer.flip();
-
-		byte[] messageBytes = new byte[requestBuffer.limit()];
-		requestBuffer.get(messageBytes);
-
-		DatagramPacket requestPacket = new DatagramPacket(
-				messageBytes, messageBytes.length,
-				dnsServer, DNS_PORT);
-
-		try (DatagramSocket s = new DatagramSocket()) {
-			s.send(requestPacket);
-
-			byte[] buf = new byte[1024];
-			DatagramPacket response = new DatagramPacket(buf, buf.length);
-			s.receive(response);
-
-			byte[] responseBytes = new byte[response.getLength()];
-			System.arraycopy(response.getData(), response.getOffset(), responseBytes, 0, response.getLength());
-
-			ByteBuffer byteBuffer = ByteBuffer.wrap(responseBytes);
-			Message responseMessage = new Message().fromBytes(byteBuffer);
-
-			return responseMessage;
+		DnsTransport transport;
+		if (useUdp) {
+			transport = new UdpTransport(dnsServer);
+		} else {
+			transport = new TcpTransport(dnsServer);
 		}
+		return getReply(requestMessage, transport);
+	}
+
+	public Message getReply(Message requestMessage, DnsTransport transport) throws IOException {
+		return transport.sendQuery(requestMessage);
 	}
 
 	private Message createMessage(String domain, Class questionClass, Type questionType) {
