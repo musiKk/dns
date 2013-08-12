@@ -95,6 +95,9 @@ public class Record implements MessageContent<Record> {
 		case MINFO:
 			recordData = new Minfo();
 			break;
+		case MR:
+			recordData = new Mr();
+			break;
 		case MX:
 			recordData = new Mx();
 			break;
