@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import com.github.musikk.dns.Domain;
+import com.github.musikk.dns.Mailbox;
 
 public class Soa extends RecordData<Soa> {
 
 	private final Domain zoneSource;
-	private final Domain zoneMailbox;
+	private final Mailbox zoneMailbox;
 	private long serial;
 	private long refresh;
 	private long retry;
@@ -17,10 +18,10 @@ public class Soa extends RecordData<Soa> {
 
 	public Soa() {
 		zoneSource = new Domain();
-		zoneMailbox = new Domain();
+		zoneMailbox = new Mailbox();
 	}
 
-	public Soa(Domain zoneSource, Domain zoneMailbox, long serial,
+	public Soa(Domain zoneSource, Mailbox zoneMailbox, long serial,
 			long refresh, long retry, long expire, long minimum) {
 		checkInt(serial);
 		checkInt(refresh);
@@ -41,7 +42,7 @@ public class Soa extends RecordData<Soa> {
 		return zoneSource;
 	}
 
-	public Domain getZoneMailbox() {
+	public Mailbox getZoneMailbox() {
 		return zoneMailbox;
 	}
 

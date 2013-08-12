@@ -5,6 +5,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class Domain implements MessageContent<Domain> {
 	private final Collection<String> labels = new ArrayList<>();
@@ -36,6 +39,26 @@ public class Domain implements MessageContent<Domain> {
 	public static Domain fromQName(String name) {
 		return new Domain(name.split("\\."));
 	}
+
+	/**
+	 * An immutable view on this domain's labels.
+	 *
+	 * @return
+	 */
+	public Collection<String> getLabels() {
+		return Collections.unmodifiableCollection(labels);
+	}
+
+	/**
+	 * Formats and returns the domain as a dot delimited string. Note that the
+	 * returned string does not contain a trailing period.
+	 *
+	 * @return
+	 */
+	public String getDomain() {
+		return StringUtils.join(labels.iterator(), '.');
+	}
+
 	@Override
 	public Domain toBytes(ByteBuffer buf) {
 		// TODO use compression

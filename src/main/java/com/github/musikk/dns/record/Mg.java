@@ -3,39 +3,39 @@ package com.github.musikk.dns.record;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import com.github.musikk.dns.Domain;
+import com.github.musikk.dns.Mailbox;
 
 public class Mg extends RecordData<Mg> {
 
-	private final Domain domain;
+	private final Mailbox mailbox;
 
 	public Mg() {
-		this(new Domain());
+		this(new Mailbox());
 	}
 
-	public Mg(Domain domain) {
-		this.domain = domain;
+	public Mg(Mailbox mailbox) {
+		this.mailbox = mailbox;
 	}
 
-	public Domain getDomain() {
-		return domain;
+	public Mailbox getMailbox() {
+		return mailbox;
 	}
 
 	@Override
 	public RecordData<Mg> toBytes(ByteBuffer buf) throws IOException {
-		domain.toBytes(buf);
+		mailbox.toBytes(buf);
 		return this;
 	}
 
 	@Override
 	public RecordData<Mg> fromBytes(ByteBuffer buf) throws IOException {
-		domain.fromBytes(buf);
+		mailbox.fromBytes(buf);
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "Mg [domain=" + domain + "]";
+		return "Mg [mailbox=" + mailbox + "]";
 	}
 
 }
